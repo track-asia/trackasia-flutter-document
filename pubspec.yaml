@@ -15,7 +15,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  trackasia_gl: 2.0.1
+  trackasia_gl: 2.0.3
   dio: ^4.0.0
   freezed: ^2.0.4
   json_serializable: ^6.2.0
