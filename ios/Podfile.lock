@@ -7,10 +7,10 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - TrackAsia (2.0.0)
-  - trackasia_gl (0.0.1):
+  - Trackasia (2.0.3)
+  - trackasia_gl (2.0.3):
     - Flutter
-    - TrackAsia (= 2.0.0)
+    - Trackasia (= 2.0.3)
   - url_launcher_ios (0.0.1):
     - Flutter
 
@@ -23,8 +23,8 @@ DEPENDENCIES:
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
-  trunk:
-    - TrackAsia
+  https://github.com/track-asia/trackasia-flutter-podspecs.git:
+    - Trackasia
 
 EXTERNAL SOURCES:
   Flutter:
@@ -41,14 +41,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  geolocator_apple: 9157311f654584b9bb72686c55fc02a97b73f461
-  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
-  TrackAsia: 6539fd08d2dd92fd0798ca473f22c0c2e36fe539
-  trackasia_gl: 45a7ae361f5c8b5e11f2fc279541bacffae7339c
-  url_launcher_ios: bbd758c6e7f9fd7b5b1d4cde34d2b95fcce5e812
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
+  permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
+  shared_preferences_foundation: 0b09b969fb36da5551c0bc4a2dbd9d0ff9387478
+  Trackasia: 8e0e885ade38efd0193dbabb9c2a942918951d3a
+  trackasia_gl: f3a519396cdb45afbf0e6ebe943f8ea5aea918fa
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: f7f916bf5005fbe09a0b5c3385ef6b8829c2ede9
+PODFILE CHECKSUM: 46f6d985d43934f288a1c911d156ea1efc1229ce
 
 COCOAPODS: 1.16.2

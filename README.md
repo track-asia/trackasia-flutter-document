@@ -1,51 +1,96 @@
-# Hướng Dẫn Tích Hợp TrackAsia vào Dự Án Flutter
+# TrackAsia Flutter Demo Application
 
 ## Giới Thiệu
 
-TrackAsia là một thư viện bản đồ mạnh mẽ cho ứng dụng Flutter, cung cấp bản đồ chất lượng cao, theo dõi vị trí và nhiều tính năng bản đồ khác. Hướng dẫn này sẽ giúp bạn tích hợp TrackAsia vào dự án Flutter của mình.
+Đây là ứng dụng demo cho TrackAsia Flutter GL - một thư viện bản đồ mạnh mẽ dành cho ứng dụng Flutter. Ứng dụng demo này minh họa các tính năng chính của TrackAsia bao gồm hiển thị bản đồ, tìm kiếm địa chỉ, clustering, animation, và nhiều tính năng khác trên nhiều quốc gia khác nhau.
+
+## Tính Năng Chính
+
+- 🗺️ **Hiển thị bản đồ đa quốc gia**: Hỗ trợ Việt Nam, Singapore, Thailand, Taiwan, Malaysia
+- 🔍 **Tìm kiếm địa chỉ**: Autocomplete với API geocoding
+- 📍 **Định vị GPS**: Lấy vị trí hiện tại của người dùng
+- 🎯 **Waypoint Navigation**: Tính năng điều hướng với điểm đi và điểm đến
+- 🔘 **Clustering**: Hiển thị dữ liệu cluster từ API
+- ✨ **Animation**: Demo các hiệu ứng animation trên bản đồ
+- 📊 **Analytics**: Tích hợp RudderStack để theo dõi user behavior
 
 ## Mục Lục
 
 1. [Yêu Cầu Hệ Thống](#yêu-cầu-hệ-thống)
 2. [Cài Đặt](#cài-đặt)
-3. [Triển Khai Cơ Bản](#triển-khai-cơ-bản)
-4. [Tính Năng Nâng Cao](#tính-năng-nâng-cao)
+3. [Cấu Trúc Dự Án](#cấu-trúc-dự-án)
+4. [Các Trang Demo](#các-trang-demo)
 5. [Cấu Hình Theo Nền Tảng](#cấu-hình-theo-nền-tảng)
-6. [Xử Lý Sự Cố](#xử-lý-sự-cố)
-7. [Tài Nguyên](#tài-nguyên)
+6. [API và Services](#api-và-services)
+7. [Xử Lý Sự Cố](#xử-lý-sự-cố)
+8. [Tài Nguyên](#tài-nguyên)
 
 ## Yêu Cầu Hệ Thống
 
-Trước khi tích hợp TrackAsia vào dự án Flutter, hãy đảm bảo bạn có:
+Trước khi chạy ứng dụng demo này, hãy đảm bảo bạn có:
 
-- Flutter SDK đã cài đặt (phiên bản 2.18.6 trở lên)
-- Một dự án Flutter đang hoạt động
+- Flutter SDK đã cài đặt (phiên bản 2.18.6 hoặc cao hơn)
+- Dart SDK 2.18.6 hoặc cao hơn
+- Android Studio hoặc Xcode (cho development mobile)
 - Hiểu biết cơ bản về phát triển Flutter
 
 ## Cài Đặt
 
-### Bước 1: Thêm Dependencies
+### Bước 1: Clone Repository
 
-Thêm các dependencies sau vào file `pubspec.yaml`:
+```bash
+git clone <repository-url>
+cd trackasia-document-flutter-github
+```
+
+### Bước 2: Cài Đặt Dependencies
+
+Ứng dụng sử dụng các dependencies chính sau:
 
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
   
-  # TrackAsia dependencies
-  trackasia_gl: ^2.0.1
-  trackasia_gl_platform_interface: ^1.0.5
-  trackasia_gl_web: ^1.0.1
+  # TrackAsia Core
+  trackasia_gl: 2.0.3
+  
+  # State Management
+  flutter_bloc: ^8.1.4
+  
+  # Location & Geocoding
+  geolocator: ^11.0.0
+  
+  # Networking
+  dio: ^4.0.0
+  http: ^1.2.0
+  
+  # Data Persistence
+  shared_preferences: ^2.0.0
+  
+  # Analytics
+  rudder_sdk_flutter: ^3.1.0
+  
+  # UI & Utils
+  flutter_screenutil: ^5.7.0
+  textfield_tags: ^3.0.1
+  dropdown_button2: ^2.3.9
+  permission_handler: 10.2.0
+  url_launcher: ^6.2.5
+  intl: 0.18.0
+  
+  # JSON Serialization
+  freezed: ^2.0.4
+  json_serializable: ^6.2.0
 ```
 
-### Bước 2: Cài Đặt Dependencies
-
-Chạy lệnh sau để cài đặt các dependencies:
+Chạy lệnh sau để cài đặt dependencies:
 
 ```bash
 flutter pub get
 ```
+
+### Bước 3: Cấu Hình Platform
 
 ## Triển Khai Cơ Bản
 
@@ -75,7 +120,7 @@ Widget build(BuildContext context) {
   return Scaffold(
     body: TrackasiaMap(
       onMapCreated: _onMapCreated,
-      styleString: "https://tiles.track-asia.com/tiles/v3/style-streets.json?key=public",
+      styleString: "https://maps.track-asia.com/styles/v1/streets.json?key=public",
       initialCameraPosition: const CameraPosition(target: LatLng(16.25658, 106.31679), zoom: 4.8),
       onStyleLoadedCallback: _onStyleLoadedCallback,
     ),
@@ -193,7 +238,7 @@ android {
     // ...
     defaultConfig {
         // ...
-        minSdkVersion 20
+        minSdkVersion 26
         // ...
     }
     // ...
