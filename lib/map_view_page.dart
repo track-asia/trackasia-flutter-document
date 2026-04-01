@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:trackasia/components/address_map_widget.dart';
 import 'components/trackasia_map_widget.dart';
-import 'package:rudder_sdk_flutter/RudderController.dart';
+// import 'package:rudder_sdk_flutter/RudderController.dart';
 
 class MapViewPage extends StatefulWidget {
   @override
