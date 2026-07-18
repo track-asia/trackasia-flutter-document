@@ -19,26 +19,26 @@ dependencies:
   dio: ^4.0.0
   freezed: ^2.0.4
   json_serializable: ^6.2.0
-  shared_preferences: ^2.0.0
+  shared_preferences: ^2.3.2
   flutter_bloc: ^8.1.4
-  geolocator: ^11.0.0
+  geolocator: ^13.0.1
   http: ^1.2.0
-  url_launcher: ^6.3.0
+  url_launcher: ^6.3.1
   intl: 0.18.0
   flutter_screenutil: ^5.7.0
   textfield_tags: ^3.0.1
-  permission_handler: 10.2.0
+  permission_handler: ^11.3.1
   dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^5.0.0
   build_runner: ^2.3.3
   injectable_generator: ^1.5.3
 
-# dependency_overrides:
-#   url_launcher_ios: ^6.3.4
+dependency_overrides:
+  url_launcher_android: 6.3.14
 flutter:
 
   uses-material-design: true

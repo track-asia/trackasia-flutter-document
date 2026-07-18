@@ -14,7 +14,7 @@ Update Document
 - 🎯 **Waypoint Navigation**: Tính năng điều hướng với điểm đi và điểm đến
 - 🔘 **Clustering**: Hiển thị dữ liệu cluster từ API
 - ✨ **Animation**: Demo các hiệu ứng animation trên bản đồ
-- 📊 **Analytics**: Tích hợp RudderStack để theo dõi user behavior
+- 📊 **Analytics**: Tích hợp RudderStack để theo dõi user behavior (tùy chọn, đã bỏ trong phiên bản hiện tại)
 
 ## Mục Lục
 
@@ -31,9 +31,11 @@ Update Document
 
 Trước khi chạy ứng dụng demo này, hãy đảm bảo bạn có:
 
-- Flutter SDK đã cài đặt (phiên bản 2.18.6 hoặc cao hơn)
-- Dart SDK 2.18.6 hoặc cao hơn
+- Flutter SDK đã cài đặt (phiên bản 3.24.0 hoặc cao hơn)
+- Dart SDK 3.5.0 hoặc cao hơn
 - Android Studio hoặc Xcode (cho development mobile)
+- Android NDK 27.0.12077973 (yêu cầu bởi trackasia_gl)
+- Java 17 (cho Gradle build)
 - Hiểu biết cơ bản về phát triển Flutter
 
 ## Cài Đặt
@@ -61,29 +63,29 @@ dependencies:
   flutter_bloc: ^8.1.4
   
   # Location & Geocoding
-  geolocator: ^11.0.0
+  geolocator: ^13.0.1
   
   # Networking
   dio: ^4.0.0
   http: ^1.2.0
   
   # Data Persistence
-  shared_preferences: ^2.0.0
-  
-  # Analytics
-  rudder_sdk_flutter: ^3.1.0
+  shared_preferences: ^2.3.2
   
   # UI & Utils
   flutter_screenutil: ^5.7.0
   textfield_tags: ^3.0.1
   dropdown_button2: ^2.3.9
-  permission_handler: 10.2.0
-  url_launcher: ^6.2.5
+  permission_handler: ^11.3.1
+  url_launcher: ^6.3.1
   intl: 0.18.0
   
   # JSON Serialization
   freezed: ^2.0.4
   json_serializable: ^6.2.0
+
+dependency_overrides:
+  url_launcher_android: 6.3.14  # Fix v1 embedding compatibility
 ```
 
 Chạy lệnh sau để cài đặt dependencies:
@@ -122,7 +124,7 @@ Widget build(BuildContext context) {
   return Scaffold(
     body: TrackasiaMap(
       onMapCreated: _onMapCreated,
-      styleString: "https://maps.track-asia.com/styles/v1/streets.json?key=public",
+      styleString: "https://maps.track-asia.com/styles/v2/streets.json?key=public",
       initialCameraPosition: const CameraPosition(target: LatLng(16.25658, 106.31679), zoom: 4.8),
       onStyleLoadedCallback: _onStyleLoadedCallback,
     ),
@@ -233,26 +235,97 @@ mapController?.animateCamera(
 
 ### Cấu Hình Android
 
-1. Cập nhật file `android/app/build.gradle`:
+1. Cập nhật file `android/settings.gradle` (declarative plugin style):
+
+```gradle
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def sdkPath = properties.getProperty("flutter.sdk")
+        assert sdkPath != null : "flutter.sdk not set in local.properties"
+        return sdkPath
+    }()
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
+    id "com.android.application" version "8.5.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.9.10" apply false
+}
+
+include ":app"
+```
+
+2. Cập nhật file `android/app/build.gradle`:
 
 ```gradle
 android {
-    // ...
+    compileSdkVersion 36
+    ndkVersion "27.0.12077973"
+    
     defaultConfig {
-        // ...
         minSdkVersion 26
-        // ...
+        targetSdkVersion 35
     }
-    // ...
+    
+    kotlinOptions {
+        jvmTarget = '1.8'
+        freeCompilerArgs = ['-Xskip-metadata-version-check']
+    }
+}
+
+// Force consistent kotlin-stdlib versions
+subprojects {
+    project.configurations.all {
+        resolutionStrategy {
+            force "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
+            force "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.10"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
+        }
+    }
 }
 ```
 
-2. Thêm các quyền sau vào `AndroidManifest.xml`:
+3. Thêm các quyền sau vào `AndroidManifest.xml`:
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+```
+
+Thêm `android:usesCleartextTraffic="true"` vào thẻ `<application>`:
+```xml
+<application
+    android:label="trackasia"
+    android:usesCleartextTraffic="true"
+    ...>
+```
+
+4. Cập nhật `android/gradle.properties`:
+```properties
+org.gradle.jvmargs=-Xmx4096M -XX:MaxMetaspaceSize=1024m
+android.useAndroidX=true
+android.enableJetifier=true
+org.gradle.parallel=true
+org.gradle.caching=true
+```
+
+5. Cập nhật `android/gradle/wrapper/gradle-wrapper.properties`:
+```properties
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-all.zip
 ```
 
 ### Cấu Hình iOS
@@ -262,14 +335,21 @@ android {
 ```xml
 <key>NSLocationWhenInUseUsageDescription</key>
 <string>Ứng dụng cần quyền truy cập vị trí khi đang mở.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>Ứng dụng cần quyền truy cập vị trí để hiển thị bản đồ.</string>
 <key>io.flutter.embedded_views_preview</key>
-<true/>
-<key>MGLMapboxMetricsEnabledSettingShownInApp</key>
 <true/>
 ```
 
+> **Lưu ý:** Không cần `MGLMapboxMetricsEnabledSettingShownInApp` khi dùng TrackAsia.
+
 2. Nếu bạn sử dụng Cocoapods, hãy đảm bảo có repository TrackAsia Cocoapods:
    [TrackAsia Cocoapods Repository](https://github.com/track-asia/trackasia-cocoapods)
+
+3. Cập nhật `ios/Podfile` đảm bảo minimum iOS version 13.0:
+```ruby
+platform :ios, '13.0'
+```
 
 ### Cấu Hình Web
 
@@ -279,9 +359,14 @@ android {
 
 ### Vấn Đề Thường Gặp
 
-1. **Bản đồ không hiển thị**: Kiểm tra URL style và kết nối internet.
+1. **Bản đồ không hiển thị**: Kiểm tra URL style (đảm bảo dùng `v2` không phải `v1`) và kết nối internet.
 2. **Vị trí không hoạt động**: Kiểm tra cấu hình quyền truy cập.
 3. **Markers không hiển thị**: Xác minh assets marker đã được thêm đúng cách.
+4. **Lỗi `PluginRegistry.Registrar` không tìm thấy**: Plugin cũ sử dụng Flutter v1 embedding. Nâng cấp plugin lên phiên bản mới (permission_handler ≥ 11.x, shared_preferences ≥ 2.3.x, url_launcher ≥ 6.3.x).
+5. **Lỗi `Kotlin metadata version mismatch`**: TrackAsia SDK build bằng Kotlin 2.1.0. Thêm `freeCompilerArgs = ['-Xskip-metadata-version-check']` vào `kotlinOptions` và force `kotlin-stdlib` versions.
+6. **Lỗi NDK version**: TrackAsia_gl yêu cầu NDK 27.0.12077973. Thêm `ndkVersion "27.0.12077973"` vào block `android` trong `app/build.gradle`.
+7. **Lỗi `app_plugin_loader` không hỗ trợ**: Flutter 3.24+ yêu cầu declarative Gradle plugin. Migrate `settings.gradle` sang dạng `plugins {}` block.
+8. **Java heap space khi build**: Tăng `org.gradle.jvmargs` trong `gradle.properties` lên `-Xmx4096M`.
 
 ### Mẹo Debug
 

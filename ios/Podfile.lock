@@ -2,7 +2,7 @@ PODS:
   - Flutter (1.0.0)
   - geolocator_apple (1.2.0):
     - Flutter
-  - permission_handler_apple (9.1.1):
+  - permission_handler_apple (9.4.8):
     - Flutter
   - shared_preferences_foundation (0.0.1):
     - Flutter
@@ -41,14 +41,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   geolocator_apple: 1560c3c875af2a412242c7a923e15d0d401966ff
-  permission_handler_apple: 3787117e48f80715ff04a3830ca039283d6a4f29
-  shared_preferences_foundation: 0b09b969fb36da5551c0bc4a2dbd9d0ff9387478
+  permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
+  shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   Trackasia: 8e0e885ade38efd0193dbabb9c2a942918951d3a
   trackasia_gl: f3a519396cdb45afbf0e6ebe943f8ea5aea918fa
   url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
-PODFILE CHECKSUM: 46f6d985d43934f288a1c911d156ea1efc1229ce
+PODFILE CHECKSUM: 67ab1a6e6db88ef03181f6c246c0fe2b0f59e486
 
 COCOAPODS: 1.16.2

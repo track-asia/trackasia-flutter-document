@@ -6,6 +6,8 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def kotlin_version = '1.9.10'
+
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     // throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
@@ -23,10 +25,11 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'dev.flutter.flutter-gradle-plugin'
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -35,6 +38,7 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs = ['-Xskip-metadata-version-check']
     }
 
     sourceSets {
@@ -66,5 +70,16 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+}
 
+// Force consistent kotlin-stdlib versions to avoid metadata conflict with SDK
+subprojects {
+    project.configurations.all {
+        resolutionStrategy {
+            force "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
+            force "org.jetbrains.kotlin:kotlin-stdlib-common:1.9.10"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.10"
+            force "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.10"
+        }
+    }
 }
