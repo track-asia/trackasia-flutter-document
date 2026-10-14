@@ -57,7 +57,7 @@ dependencies:
     sdk: flutter
   
   # TrackAsia Core
-  trackasia_gl: 2.0.3
+  trackasia_gl: ^2.0.4 # hoặc >=2.0.3
   
   # State Management
   flutter_bloc: ^8.1.4
