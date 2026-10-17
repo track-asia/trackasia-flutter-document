@@ -1,5 +1,3 @@
-Update Document
-
 # TrackAsia Flutter Demo Application
 
 ## Giới Thiệu
